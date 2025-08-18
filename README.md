@@ -1,9 +1,48 @@
-# Microsoft Authentication for Visual Studio Code
+# Glloopy + GlobeConnect + IronBank — Ecossistema Unificado
 
-**Notice:** This extension is bundled with Visual Studio Code. It can be disabled but not uninstalled.
+## Estrutura
+- `/glloopy` — **site público** com assistente, embeds de redes e watchdog.
+- `/globeconnect` — **infraestrutura secreta** (painel admin/kill-switch/JWT/RSA/logs).
+- `/ironbank` — **app pessoal** (web em `/www` + script para empacotar em APK via Capacitor).
+- `/ai-orchestrator` — **orquestrador de conteúdo** (fila, tradução/posting *stubs*).
 
-## Features
+## Como rodar localmente
+1. **Glloopy (3000):**
+   ```bash
+   cd glloopy && npm i && npm start
+   ```
+2. **GlobeConnect (4000):**
+   ```bash
+   cd globeconnect && npm i && npm start
+   ```
+3. **AI Orchestrator (4500):**
+   ```bash
+   cd ai-orchestrator && npm i && npm start
+   ```
+4. Ajuste variáveis em `.env` (copie de `.env.example`) conforme suas chaves.
 
-This extension provides support for authenticating to Microsoft. It registers the `microsoft` Authentication Provider that can be leveraged by other extensions. This also provides the Microsoft authentication used by Settings Sync.
+> Integrações reais de YouTube/X/Instagram, tradução (DeepL/IA) e Supabase devem ser adicionadas preenchendo as chaves e implementando os *adapters* de cada plataforma.
 
-Additionally, it provides the `microsoft-sovereign-cloud` Authentication Provider that can be used to sign in to other Azure clouds like Azure for US Government or Azure China. Use the setting `microsoft-sovereign-cloud.endpoint` to select the authentication endpoint the provider should use. Please note that different scopes may also be required in different environments.
+## IronBank — APK
+- Entre em `/ironbank`, e rode:
+  ```bash
+  ./build-apk.sh
+  ```
+  Gere o APK de debug com Android SDK/Gradle instalados.
+
+## Segurança
+- Configure `JWT_SECRET` e `KILL_SWITCH_SECRET` em produção.
+- **Nunca** exponha chaves privadas no cliente.
+- Use HTTPS (Vercel/Cloudflare) no site.
+- Restrinja o acesso ao painel do GlobeConnect (JWT + IP allowlist).
+
+## Próximos Passos Sugeridos
+1. Conectar **Glloopy** -> **AI Orchestrator** em `/api/assistant` para fila de conteúdo.
+2. Adicionar login (Supabase) para abrir o **painel secreto** só para você.
+3. Implementar adapters de **YouTube/X/Instagram** para publicação real.
+4. Ativar **tradução automática** por público-alvo.
+5. Automatizar **métricas** e melhoria contínua (dash + relatórios).
+
+---
+
+> Este pacote é um esqueleto pronto para evoluir. Diga o que priorizar e eu implemento agora.
