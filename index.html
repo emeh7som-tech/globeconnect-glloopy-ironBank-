@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Glloopy - Oficial</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX"
-     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -25,20 +23,19 @@
   <main class="p-6 space-y-6">
 
     <!-- Bloco de Anúncios AdSense -->
-    <section>
+    <section id="ads-block" style="display:none">
       <h2 class="text-lg font-bold mb-2">Publicidade</h2>
       <ins class="adsbygoogle"
           style="display:block"
           data-ad-client="ca-pub-XXXXXXXXXX"
           data-ad-slot="1234567890"
           data-ad-format="auto"></ins>
-      <script>
-           (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </section>
 
     <!-- Área de Afiliados -->
-    <section id="affiliate-area" class="p-4 border rounded bg-gray-100 shadow">
+    <section id="affiliate-area" class="p-4 border rounded bg-gray-100 shadow" style="display:none">
       <h2 class="text-lg font-bold mb-2">Ofertas Recomendadas</h2>
       <div id="affiliate-links">
         <!-- Links de afiliados inseridos dinamicamente pela IA -->
@@ -52,7 +49,7 @@
     </section>
 
     <!-- Formulário de Contato -->
-    <section id="contact" class="p-4 border rounded bg-white shadow mt-4">
+    <section id="contact-block" class="p-4 border rounded bg-white shadow mt-4" style="display:none">
       <h2 class="text-lg font-bold mb-2">Contato Comercial</h2>
       <form id="contact-form">
         <input type="text" name="name" placeholder="Seu nome" class="border p-2 w-full mb-2"/>
@@ -74,6 +71,18 @@
   </footer>
 
   <script>
+  async function loadStatus(){
+    try {
+      const resp = await fetch("http://localhost:4000/api/status"); // troque pelo IP/host do GlobeConnect
+      const status = await resp.json();
+      if(status.ads) document.getElementById("ads-block").style.display = "block";
+      if(status.affiliates) document.getElementById("affiliate-area").style.display = "block";
+      if(status.contact) document.getElementById("contact-block").style.display = "block";
+    } catch (e) {
+      console.error("Erro ao buscar status do painel:", e);
+    }
+  }
+
   async function loadYouTubeVideos() {
     const apiKey = "YOUTUBE_API_KEY_AQUI"; // trocar pela sua chave
     const channelId = "UCxxxxxxxxxxxxx";   // trocar pelo ID real do canal
@@ -91,9 +100,8 @@
       console.error("Erro ao carregar vídeos do YouTube", e);
     }
   }
-  loadYouTubeVideos();
 
-  document.getElementById("contact-form").addEventListener("submit", async (e) => {
+  document.getElementById("contact-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const payload = Object.fromEntries(formData);
@@ -104,6 +112,9 @@
     });
     alert("Mensagem enviada com sucesso! Nossa IA irá responder em breve.");
   });
+
+  loadStatus();
+  loadYouTubeVideos();
   </script>
 
 </body>
